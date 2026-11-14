@@ -6,8 +6,8 @@ import {
   Engine,
   GlowLayer,
   HemisphericLight,
-  Mesh,
   MeshBuilder,
+  PointerEventTypes,
   Scene,
   SceneLoader,
   ShadowGenerator,
@@ -20,6 +20,21 @@ import './style.css';
 import { gameStory, type StoryStep } from './story-data';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game-canvas')!;
+
+// Sem WebGL o jogo não roda: mostra uma orientação em vez de uma tela quebrada.
+function hasWebGL() {
+  try {
+    const probe = document.createElement('canvas');
+    return Boolean(probe.getContext('webgl2') || probe.getContext('webgl'));
+  } catch {
+    return false;
+  }
+}
+if (!hasWebGL()) {
+  document.querySelector<HTMLElement>('#intro')?.classList.add('hidden');
+  document.querySelector<HTMLElement>('#no-webgl')!.hidden = false;
+  throw new Error('WebGL indisponível: o jogo 3D não pode ser iniciado.');
+}
 const engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 const scene = new Scene(engine);
 scene.clearColor = new Color4(0.018, 0.022, 0.09, 1);
@@ -27,7 +42,10 @@ scene.fogMode = Scene.FOGMODE_EXP2;
 scene.fogDensity = 0.008;
 scene.fogColor = new Color3(0.04, 0.055, 0.13);
 
-const camera = new ArcRotateCamera('camera', -Math.PI / 2, 1.12, 18, new Vector3(0, 2, 2), scene);
+// A câmera começa atrás do astronauta, olhando na direção da primeira estação.
+const camera = new ArcRotateCamera('camera', Math.PI / 2, 1.12, 18, new Vector3(0, 2, 2), scene);
+// As setas do teclado movem o astronauta; não devem girar a câmera.
+camera.inputs.removeByType('ArcRotateCameraKeyboardMoveInput');
 camera.attachControl(canvas, true);
 camera.lowerRadiusLimit = 11;
 camera.upperRadiusLimit = 24;
@@ -70,6 +88,25 @@ const goldMat = material('gold', new Color3(0.72, 0.33, 0.08), new Color3(0.08, 
 const metalMat = material('metal', new Color3(0.22, 0.25, 0.32));
 const orangeMat = material('mission-orange', new Color3(1, 0.35, 0.08), new Color3(0.35, 0.045, 0));
 
+// Colisão simples: cada obstáculo é um círculo no chão (x, z, raio).
+type Obstacle = { x: number; z: number; r: number };
+const obstacles: Obstacle[] = [];
+const ASTRONAUT_RADIUS = 0.45;
+const addObstacle = (x: number, z: number, r: number) => obstacles.push({ x, z, r });
+
+function resolveCollisions(position: Vector3) {
+  for (const obstacle of obstacles) {
+    const dx = position.x - obstacle.x;
+    const dz = position.z - obstacle.z;
+    const distance = Math.hypot(dx, dz);
+    const minimum = obstacle.r + ASTRONAUT_RADIUS;
+    if (distance < minimum && distance > 1e-4) {
+      position.x = obstacle.x + (dx / distance) * minimum;
+      position.z = obstacle.z + (dz / distance) * minimum;
+    }
+  }
+}
+
 const ground = MeshBuilder.CreateGround('lunar-surface', { width: 70, height: 70, subdivisions: 2 }, scene);
 ground.material = moonMat;
 ground.receiveShadows = true;
@@ -98,6 +135,7 @@ for (let i = 0; i < 36; i += 1) {
   rock.scaling.y = 0.55;
   rock.material = i % 3 === 0 ? darkDust : moonMat;
   shadows.addShadowCaster(rock);
+  if (radius > 0.3) addObstacle(rock.position.x, rock.position.z, radius * 0.9);
 }
 
 const starMat = material('stars', Color3.White(), new Color3(1, 0.9, 0.78));
@@ -165,46 +203,73 @@ function buildAstronaut() {
   return root;
 }
 
+// Representação simplificada do ALSEP: central com antena, ligada por cabos
+// a instrumentos espalhados no solo (sismômetro e outros sensores).
 function buildLunarStation() {
   const root = new TransformNode('apollo-12-station', scene);
   root.position.set(1.8, 0, -6.5);
-  const base = MeshBuilder.CreateCylinder('station-base', { diameter: 2.5, height: 1.35, tessellation: 8 }, scene);
-  base.parent = root;
-  base.position.y = 1.55;
-  base.material = goldMat;
-  shadows.addShadowCaster(base);
-  const top = MeshBuilder.CreateCylinder('station-top', { diameterTop: 1.35, diameterBottom: 2.05, height: 1.2, tessellation: 8 }, scene);
-  top.parent = root;
-  top.position.y = 2.75;
-  top.material = metalMat;
-  shadows.addShadowCaster(top);
-  box('station-panel', { width: 1.6, height: 0.75, depth: 0.12 }, new Vector3(0, 1.55, -1.08), orangeMat, root);
-  [-1, 1].forEach((side) => {
-    const strut = MeshBuilder.CreateCylinder(`strut-${side}`, { diameter: 0.12, height: 3.15, tessellation: 12 }, scene);
-    strut.parent = root;
-    strut.position.set(side * 1.35, 0.95, 0);
-    strut.rotation.z = side * 0.72;
-    strut.material = metalMat;
-    shadows.addShadowCaster(strut);
-    const foot = MeshBuilder.CreateCylinder(`foot-${side}`, { diameter: 0.75, height: 0.12, tessellation: 24 }, scene);
-    foot.parent = root;
-    foot.position.set(side * 2.2, 0.08, 0);
-    foot.material = goldMat;
-  });
-  const antenna = MeshBuilder.CreateCylinder('antenna', { diameter: 0.08, height: 1.5 }, scene);
-  antenna.parent = root;
-  antenna.position.set(0.55, 3.85, 0);
-  antenna.material = metalMat;
-  const beacon = MeshBuilder.CreateSphere('beacon', { diameter: 0.28 }, scene);
+  const central = box('alsep-central', { width: 1.5, height: 0.7, depth: 1 }, new Vector3(0, 0.55, 0), goldMat, root);
+  central.receiveShadows = true;
+  box('alsep-sunshade', { width: 1.7, height: 0.06, depth: 1.2 }, new Vector3(0, 1.05, 0), metalMat, root);
+  [-0.6, 0.6].forEach((x) => box(`alsep-leg-${x}`, { width: 0.08, height: 0.3, depth: 0.08 }, new Vector3(x, 0.15, 0), metalMat, root));
+  box('station-panel', { width: 1, height: 0.35, depth: 0.05 }, new Vector3(0, 0.55, -0.52), orangeMat, root);
+
+  const mast = MeshBuilder.CreateCylinder('antenna-mast', { diameter: 0.07, height: 1.6 }, scene);
+  mast.parent = root;
+  mast.position.set(0.45, 1.85, 0.2);
+  mast.material = metalMat;
+  shadows.addShadowCaster(mast);
+  const dish = MeshBuilder.CreateCylinder('antenna-dish', { diameterTop: 0.9, diameterBottom: 0.12, height: 0.28, tessellation: 24 }, scene);
+  dish.parent = root;
+  dish.position.set(0.45, 2.7, 0.2);
+  dish.rotation.x = -0.7;
+  dish.material = metalMat;
+  shadows.addShadowCaster(dish);
+  const beacon = MeshBuilder.CreateSphere('beacon', { diameter: 0.22 }, scene);
   beacon.parent = root;
-  beacon.position.set(0.55, 4.62, 0);
+  beacon.position.set(0.45, 2.95, 0.05);
   beacon.material = orangeMat;
+
+  // Instrumentos ligados por cabos à central.
+  const instruments = [
+    { name: 'sismometro', at: new Vector3(-2.4, 0, -1.4), shape: 'dome' },
+    { name: 'magnetometro', at: new Vector3(2.5, 0, -1.1), shape: 'box' },
+    { name: 'rtg', at: new Vector3(-1.9, 0, 1.6), shape: 'cyl' },
+  ];
+  for (const instrument of instruments) {
+    if (instrument.shape === 'dome') {
+      const dome = MeshBuilder.CreateSphere(`alsep-${instrument.name}`, { diameter: 0.75, slice: 0.5 }, scene);
+      dome.parent = root;
+      dome.position.copyFrom(instrument.at);
+      dome.material = goldMat;
+      shadows.addShadowCaster(dome);
+    } else if (instrument.shape === 'box') {
+      box(`alsep-${instrument.name}`, { width: 0.5, height: 0.5, depth: 0.5 }, instrument.at.add(new Vector3(0, 0.25, 0)), metalMat, root);
+    } else {
+      const cyl = MeshBuilder.CreateCylinder(`alsep-${instrument.name}`, { diameter: 0.45, height: 0.7, tessellation: 16 }, scene);
+      cyl.parent = root;
+      cyl.position.copyFrom(instrument.at.add(new Vector3(0, 0.35, 0)));
+      cyl.material = metalMat;
+      shadows.addShadowCaster(cyl);
+    }
+    addObstacle(root.position.x + instrument.at.x, root.position.z + instrument.at.z, 0.35);
+    const cable = MeshBuilder.CreateTube(`alsep-cabo-${instrument.name}`, { path: [new Vector3(0, 0.03, 0), instrument.at.add(new Vector3(0, 0.03, 0))], radius: 0.025 }, scene);
+    cable.parent = root;
+    cable.material = darkDust;
+  }
+  addObstacle(root.position.x, root.position.z, 0.95);
   return root;
 }
 
 const astronaut = buildAstronaut();
+// copyFrom mantém ângulo e distância; atribuir camera.target recalcularia o ângulo com a câmera parada.
+camera.target.copyFrom(astronaut.position.add(new Vector3(0, 1.5, 0)));
 const proceduralAstronautParts = astronaut.getChildren().slice();
 const station = buildLunarStation();
+const landingSite = new TransformNode('apollo-12-landing-site', scene);
+landingSite.position.set(station.position.x - 1, 0, station.position.z - 7);
+landingSite.rotation.y = -0.5;
+addObstacle(landingSite.position.x, landingSite.position.z, 2);
 
 async function importSceneAsset(
   fileName: string,
@@ -257,6 +322,7 @@ async function loadKenneySceneAssets() {
       const anchor = new TransformNode(`${asset.name}-anchor`, scene);
       anchor.position.copyFrom(asset.position);
       anchor.rotation.y = asset.rotation;
+      if (asset.file.startsWith('rock')) addObstacle(asset.position.x, asset.position.z, asset.span * 0.45);
       await importSceneAsset(asset.file, asset.name, anchor, asset.span);
     }));
     document.documentElement.dataset.kenneyAssets = 'loaded';
@@ -286,15 +352,12 @@ async function loadOfficialNasaLunarModule() {
     importedRoot.computeWorldMatrix(true);
     const scaledBounds = importedRoot.getHierarchyBoundingVectors(true);
     importedRoot.position.y -= scaledBounds.min.y;
-    importedRoot.parent = station;
+    // O módulo fica ao lado da estação, como marco do local de pouso.
+    importedRoot.parent = landingSite;
 
     for (const mesh of result.meshes) {
       mesh.receiveShadows = true;
       shadows.addShadowCaster(mesh);
-    }
-
-    for (const child of station.getChildren()) {
-      if (child !== importedRoot) child.setEnabled(false);
     }
     document.documentElement.dataset.nasaModel = 'loaded';
   } catch (error) {
@@ -305,13 +368,55 @@ async function loadOfficialNasaLunarModule() {
 
 void loadOfficialNasaLunarModule();
 
-const discoveryRing = MeshBuilder.CreateTorus('discovery-ring', { diameter: 5.2, thickness: 0.06, tessellation: 64 }, scene);
+const discoveryRing = MeshBuilder.CreateTorus('discovery-ring', { diameter: 6.6, thickness: 0.06, tessellation: 64 }, scene);
 discoveryRing.position.set(station.position.x, 0.12, station.position.z);
 discoveryRing.material = orangeMat;
 
 const keys = new Set<string>();
 window.addEventListener('keydown', (event) => keys.add(event.key.toLowerCase()));
 window.addEventListener('keyup', (event) => keys.delete(event.key.toLowerCase()));
+// Controle por toque: joystick virtual exibido em telas sensíveis ao toque.
+const joystick = document.querySelector<HTMLElement>('#joystick')!;
+const joystickKnob = joystick.querySelector<HTMLElement>('.joystick-knob')!;
+const touchInput = { x: 0, z: 0 };
+let joystickPointer: number | null = null;
+const enableTouchMode = () => document.documentElement.classList.add('touch');
+if (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0) enableTouchMode();
+window.addEventListener('touchstart', enableTouchMode, { once: true, passive: true });
+
+function updateJoystick(event: PointerEvent) {
+  const rect = joystick.getBoundingClientRect();
+  const maxOffset = rect.width / 2;
+  let dx = event.clientX - (rect.left + maxOffset);
+  let dy = event.clientY - (rect.top + maxOffset);
+  const length = Math.hypot(dx, dy);
+  if (length > maxOffset) { dx *= maxOffset / length; dy *= maxOffset / length; }
+  joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+  const x = dx / maxOffset;
+  const z = -dy / maxOffset;
+  const deadZone = Math.hypot(x, z) < 0.15;
+  touchInput.x = deadZone ? 0 : x;
+  touchInput.z = deadZone ? 0 : z;
+}
+function releaseJoystick() {
+  joystickPointer = null;
+  touchInput.x = 0;
+  touchInput.z = 0;
+  joystickKnob.style.transform = '';
+}
+joystick.addEventListener('pointerdown', (event) => {
+  event.preventDefault();
+  joystickPointer = event.pointerId;
+  joystick.setPointerCapture(event.pointerId);
+  updateJoystick(event);
+});
+joystick.addEventListener('pointermove', (event) => { if (event.pointerId === joystickPointer) updateJoystick(event); });
+joystick.addEventListener('pointerup', (event) => { if (event.pointerId === joystickPointer) releaseJoystick(); });
+joystick.addEventListener('pointercancel', (event) => { if (event.pointerId === joystickPointer) releaseJoystick(); });
+
+// Evita o astronauta "andando sozinho" quando a janela perde o foco com uma tecla apertada.
+window.addEventListener('blur', () => { keys.clear(); releaseJoystick(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) keys.clear(); });
 
 const intro = document.querySelector<HTMLElement>('#intro')!;
 const startButton = document.querySelector<HTMLButtonElement>('#start-button')!;
@@ -337,19 +442,57 @@ prologuePages.innerHTML = gameStory.prologue.paragraphs.map((paragraph) => `<p>$
 prologueMission.textContent = gameStory.prologue.mission;
 encounterCopy.innerHTML = gameStory.firstDiscovery.encounter.map((paragraph) => `<p>${paragraph}</p>`).join('');
 
+const TOTAL_DISCOVERIES = 12;
+const STORAGE_KEY = 'space-historians:progresso:v1';
+const archiveCount = document.querySelector<HTMLElement>('#archive-count')!;
+const archiveProgress = document.querySelector<HTMLElement>('#archive-progress')!;
+const objectiveText = document.querySelector<HTMLElement>('#objective-text')!;
+const routeFirst = document.querySelector<HTMLElement>('#route-01')!;
+
+// Progresso salvo no navegador (sobrevive a recarregar a página no tablet).
+function loadProgress() {
+  try {
+    // ?reiniciar na URL apaga o progresso (útil para testes e apresentações).
+    if (new URLSearchParams(location.search).has('reiniciar')) localStorage.removeItem(STORAGE_KEY);
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as Record<string, string[]>;
+    const validIds = new Set<string>(gameStory.firstDiscovery.steps.map((step) => step.id));
+    (saved[gameStory.firstDiscovery.number] ?? []).filter((id) => validIds.has(id)).forEach((id) => completedSteps.add(id));
+  } catch { /* sem armazenamento disponível: segue sem salvar */ }
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ [gameStory.firstDiscovery.number]: [...completedSteps] }));
+  } catch { /* ignora */ }
+}
+
 function updateKnowledgeScore() {
-  const score = gameStory.firstDiscovery.steps
+  const steps = gameStory.firstDiscovery.steps;
+  const maxScore = steps.reduce((total, step) => total + step.reward, 0);
+  const score = steps
     .filter((step) => completedSteps.has(step.id))
     .reduce((total, step) => total + step.reward, 0);
-  knowledgeScore.textContent = `${score} / 60 PONTOS`;
+  knowledgeScore.textContent = `${score} / ${maxScore} PONTOS`;
+
+  const complete = steps.every((step) => completedSteps.has(step.id));
+  knowledgeScore.classList.toggle('complete', complete);
+  const completedDiscoveries = complete ? 1 : 0;
+  archiveCount.textContent = String(completedDiscoveries).padStart(2, '0');
+  archiveProgress.style.width = `${(completedDiscoveries / TOTAL_DISCOVERIES) * 100}%`;
+  routeFirst.classList.toggle('done', complete);
+  routeFirst.querySelector('span')!.textContent = complete ? `${gameStory.firstDiscovery.mission} · concluído ✓` : `${gameStory.firstDiscovery.mission} · atual`;
+  objectiveText.textContent = complete ? `Ficha ${gameStory.firstDiscovery.number} concluída · ${maxScore} pontos` : 'Encontre a estação lunar';
+  objectiveText.parentElement!.parentElement!.classList.toggle('done', complete);
+  saveProgress();
 }
 
 function openStoryStep(step: StoryStep, tab: HTMLButtonElement) {
   storyTabs.querySelectorAll('button').forEach((button) => button.classList.remove('active'));
   tab.classList.add('active');
   storyPanel.classList.remove('hidden');
+  const done = completedSteps.has(step.id);
   storyPanel.innerHTML = `
-    <p class="story-reward">+${step.reward} PONTOS</p>
+    <p class="story-reward">${done ? '✓ ' : '+'}${step.reward} PONTOS</p>
     <h3>${step.title}</h3>
     ${step.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join('')}
     <div class="story-activity">
@@ -358,30 +501,51 @@ function openStoryStep(step: StoryStep, tab: HTMLButtonElement) {
       <p class="activity-feedback" aria-live="polite"></p>
     </div>`;
 
-  storyPanel.querySelectorAll<HTMLButtonElement>('[data-option]').forEach((option) => {
+  const feedback = storyPanel.querySelector<HTMLElement>('.activity-feedback')!;
+  const options = [...storyPanel.querySelectorAll<HTMLButtonElement>('[data-option]')];
+
+  // Depois do acerto, a atividade fica travada mostrando a resposta certa.
+  const lockAsSolved = (earned: boolean) => {
+    options.forEach((button) => {
+      button.disabled = true;
+      button.classList.toggle('correct', Number(button.dataset.option) === step.activity.correct);
+      button.classList.remove('wrong');
+    });
+    feedback.textContent = earned ? `${step.activity.success} +${step.reward} pontos.` : step.activity.success;
+    feedback.className = 'activity-feedback success';
+  };
+
+  if (done) {
+    lockAsSolved(false);
+    return;
+  }
+
+  options.forEach((option) => {
     option.addEventListener('click', () => {
-      const feedback = storyPanel.querySelector<HTMLElement>('.activity-feedback')!;
       if (Number(option.dataset.option) !== step.activity.correct) {
-        feedback.textContent = 'Quase! Observe as pistas e tente novamente.';
+        option.classList.add('wrong');
+        feedback.textContent = step.activity.hint ?? 'Quase! Observe as pistas e tente novamente.';
         feedback.className = 'activity-feedback try-again';
         return;
       }
       completedSteps.add(step.id);
-      option.classList.add('correct');
-      feedback.textContent = `${step.activity.success} +${step.reward} pontos.`;
-      feedback.className = 'activity-feedback success';
       tab.classList.add('complete');
+      lockAsSolved(true);
       updateKnowledgeScore();
     });
   });
 }
 
+loadProgress();
 gameStory.firstDiscovery.steps.forEach((step) => {
   const tab = document.createElement('button');
   tab.innerHTML = `<span>${step.label}</span><small>+${step.reward}</small>`;
+  tab.classList.toggle('complete', completedSteps.has(step.id));
   tab.addEventListener('click', () => openStoryStep(step, tab));
   storyTabs.appendChild(tab);
 });
+if (completedSteps.size > 0) found = true;
+updateKnowledgeScore();
 
 startButton.addEventListener('click', () => {
   intro.classList.add('hidden');
@@ -389,40 +553,108 @@ startButton.addEventListener('click', () => {
   canvas.focus();
 });
 
-investigateButton.addEventListener('click', () => {
+const DISCOVERY_RADIUS = 7.5;
+const CLICK_RADIUS = 14;
+const toastEyebrow = document.querySelector<HTMLElement>('#toast-eyebrow')!;
+const toastTitle = document.querySelector<HTMLElement>('#toast-title')!;
+toastTitle.textContent = gameStory.firstDiscovery.title;
+
+const isCardOpen = () => !discoveryCard.classList.contains('hidden');
+const distanceToStation = () => Vector3.Distance(astronaut.position, station.position);
+
+function openCard() {
+  if (!gameStarted || isCardOpen()) return;
+  found = true;
+  keys.clear();
+  releaseJoystick();
   discoveryToast.classList.add('hidden');
   discoveryCard.classList.remove('hidden');
+  storyTabs.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true });
+}
+
+function closeCard() {
+  if (!isCardOpen()) return;
+  discoveryCard.classList.add('hidden');
+  canvas.focus();
+}
+
+// Mostra o aviso sempre que o astronauta está perto do equipamento,
+// permitindo reabrir a ficha quantas vezes quiser.
+function updateDiscoveryToast() {
+  const near = gameStarted && !isCardOpen() && distanceToStation() < DISCOVERY_RADIUS;
+  if (near && found) {
+    toastEyebrow.textContent = 'FICHA DO ARQUIVO';
+    investigateButton.firstChild!.textContent = 'ABRIR FICHA ';
+  }
+  discoveryToast.classList.toggle('hidden', !near);
+}
+
+investigateButton.addEventListener('click', openCard);
+closeButton.addEventListener('click', closeCard);
+// Esc ou clique fora do cartão também fecham a ficha.
+window.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCard(); });
+discoveryCard.addEventListener('click', (event) => { if (event.target === discoveryCard) closeCard(); });
+
+window.addEventListener('keydown', (event) => {
+  if ((event.key === 'e' || event.key === 'E' || event.key === 'Enter') && !isCardOpen() && distanceToStation() < DISCOVERY_RADIUS) {
+    if (event.key === 'Enter' && document.activeElement instanceof HTMLButtonElement) return;
+    openCard();
+  }
 });
 
-closeButton.addEventListener('click', () => discoveryCard.classList.add('hidden'));
+// Clicar ou tocar no equipamento também abre a ficha.
+scene.onPointerObservable.add((info) => {
+  if (info.type !== PointerEventTypes.POINTERTAP) return;
+  const mesh = info.pickInfo?.pickedMesh;
+  if (mesh && mesh.isDescendantOf(station) && distanceToStation() < CLICK_RADIUS) openCard();
+});
+
+const WALK_SPEED = 4.5; // unidades por segundo (equivale ao antigo 0,075 por quadro a 60 fps)
+
+// Entrada de movimento: x = direita/esquerda, z = frente/trás (valores de -1 a 1).
+function readMovementInput() {
+  const pressed = (...names: string[]) => names.some((name) => keys.has(name));
+  const x = (pressed('d', 'arrowright') ? 1 : 0) - (pressed('a', 'arrowleft') ? 1 : 0) + touchInput.x;
+  const z = (pressed('w', 'arrowup') ? 1 : 0) - (pressed('s', 'arrowdown') ? 1 : 0) + touchInput.z;
+  return new Vector3(Math.max(-1, Math.min(1, x)), 0, Math.max(-1, Math.min(1, z)));
+}
 
 scene.onBeforeRenderObservable.add(() => {
   earth.rotation.y += 0.0008;
   discoveryRing.rotation.y += 0.012;
   discoveryRing.scaling.setAll(1 + Math.sin(performance.now() / 500) * 0.04);
   if (!gameStarted || !discoveryCard.classList.contains('hidden')) return;
-  const direction = new Vector3(
-    (keys.has('d') || keys.has('arrowright') ? 1 : 0) - (keys.has('a') || keys.has('arrowleft') ? 1 : 0),
-    0,
-    (keys.has('s') || keys.has('arrowdown') ? 1 : 0) - (keys.has('w') || keys.has('arrowup') ? 1 : 0),
-  );
-  if (direction.lengthSquared() > 0) {
-    direction.normalize();
-    astronaut.position.addInPlace(direction.scale(0.075));
+  // Tempo real entre quadros: a velocidade é a mesma em qualquer computador.
+  const dt = Math.min(engine.getDeltaTime() / 1000, 0.1);
+  const input = readMovementInput();
+  if (input.lengthSquared() > 0) {
+    // Direção relativa à câmera: "frente" é sempre para onde a câmera olha.
+    const forward = camera.target.subtract(camera.position);
+    forward.y = 0;
+    forward.normalize();
+    const right = Vector3.Cross(Vector3.Up(), forward);
+    const direction = right.scale(input.x).add(forward.scale(input.z));
+    if (direction.lengthSquared() > 1) direction.normalize();
+    astronaut.position.addInPlace(direction.scale(WALK_SPEED * dt));
+    resolveCollisions(astronaut.position);
     astronaut.position.y = Math.abs(Math.sin(performance.now() / 115)) * 0.055;
     astronaut.position.x = Math.max(-25, Math.min(25, astronaut.position.x));
     astronaut.position.z = Math.max(-25, Math.min(25, astronaut.position.z));
     // O modelo Poly considera o eixo frontal oposto ao usado pela movimentação.
     astronaut.rotation.y = Math.atan2(direction.x, direction.z) + Math.PI;
-    camera.target = Vector3.Lerp(camera.target, astronaut.position.add(new Vector3(0, 1.5, 0)), 0.045);
   } else {
     astronaut.position.y *= 0.82;
   }
-  if (!found && Vector3.Distance(astronaut.position, station.position) < 7.5) {
-    found = true;
-    discoveryToast.classList.remove('hidden');
-  }
+  // A câmera acompanha o astronauta o tempo todo, de forma suave.
+  const follow = 1 - Math.exp(-dt * 4);
+  camera.target.copyFrom(Vector3.Lerp(camera.target, astronaut.position.add(new Vector3(0, 1.5, 0)), follow));
+  updateDiscoveryToast();
 });
 
 engine.runRenderLoop(() => scene.render());
 window.addEventListener('resize', () => engine.resize());
+
+// Gancho de depuração para testes automatizados (somente em desenvolvimento).
+if (import.meta.env.DEV) {
+  (window as unknown as { __game: unknown }).__game = { scene, camera, astronaut, station, landingSite };
+}

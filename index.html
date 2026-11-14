@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#080b25" />
     <title>Space Historians — Arquivo Lunar</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23080b25' stroke='%23ff9d4c' stroke-width='3'/%3E%3Cpath d='M32 14l4 14 14 4-14 4-4 14-4-14-14-4 14-4z' fill='%23ff9d4c'/%3E%3C/svg%3E" />
   </head>
   <body>
     <main id="game-shell">
@@ -12,24 +13,25 @@
 
       <header class="topbar">
         <div class="brand"><span class="brand-orbit">✦</span><div><strong>SPACE</strong><span>HISTORIANS</span></div></div>
-        <div class="progress-card"><span>ARQUIVO LUNAR</span><strong>01 <small>/ 12</small></strong><div class="progress"><i></i></div></div>
+        <div class="progress-card"><span>ARQUIVO LUNAR</span><strong><span id="archive-count">00</span> <small>/ 12</small></strong><div class="progress"><i id="archive-progress"></i></div></div>
       </header>
 
       <aside class="mission-card glass">
         <p class="eyebrow">MISSÃO 01 · APOLLO 12</p>
         <h1>O chão guardou<br /><em>a partida.</em></h1>
         <p>Siga o sinal luminoso. Um laboratório deixado na Lua ainda tem uma história para contar.</p>
-        <div class="objective"><span>◎</span><div><small>OBJETIVO ATUAL</small><strong>Encontre a estação lunar</strong></div></div>
+        <div class="objective"><span>◎</span><div><small>OBJETIVO ATUAL</small><strong id="objective-text">Encontre a estação lunar</strong></div></div>
       </aside>
 
       <aside class="route-card glass">
         <p class="eyebrow">ROTA DE EXPLORAÇÃO</p>
-        <div class="route-item active"><b>01</b><div><strong>Estação Lunar</strong><span>Apollo 12 · atual</span></div></div>
+        <div id="route-01" class="route-item active"><b>01</b><div><strong>Estação Lunar</strong><span>Apollo 12 · atual</span></div></div>
         <div class="route-item"><b>02</b><div><strong>Surveyor 3</strong><span>bloqueado</span></div></div>
         <div class="route-item"><b>03</b><div><strong>Estação Lunar</strong><span>Apollo 14 · bloqueado</span></div></div>
       </aside>
 
       <div class="controls glass"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><p><strong>CAMINHAR</strong>Use as teclas ou setas</p></div>
+      <div id="joystick" class="joystick" role="application" aria-label="Controle de movimento: arraste para caminhar"><div class="joystick-knob"></div><span>ARRASTE PARA CAMINHAR</span></div>
       <p class="asset-credit">PERSONAGEM 3D · POLY BY GOOGLE · CC BY</p>
 
       <section id="intro" class="intro">
@@ -43,8 +45,8 @@
       </section>
 
       <section id="discovery-toast" class="discovery-toast glass hidden" aria-live="polite">
-        <div class="signal">✦</div><div><p class="eyebrow">OBJETO ENCONTRADO</p><h2>Estação Lunar da Apollo 12</h2></div>
-        <button id="investigate-button">INVESTIGAR →</button>
+        <div class="signal">✦</div><div><p id="toast-eyebrow" class="eyebrow">OBJETO ENCONTRADO</p><h2 id="toast-title">ALSEP da Apollo 12</h2></div>
+        <button id="investigate-button">INVESTIGAR <kbd class="key-hint">E</kbd></button>
       </section>
 
       <section id="discovery-card" class="modal hidden" aria-modal="true" role="dialog">
@@ -61,6 +63,14 @@
             <button id="continue-button">CONTINUAR EXPLORANDO</button>
           </div>
         </article>
+      </section>
+      <section id="no-webgl" class="no-webgl" hidden>
+        <div class="glass">
+          <p class="eyebrow">NÃO FOI POSSÍVEL ABRIR O MAPA LUNAR</p>
+          <h2>O 3D está desligado neste navegador</h2>
+          <p>Para explorar a Lua, peça a um adulto para ativar a <strong>aceleração de hardware</strong> nas configurações do navegador (Chrome ou Edge: Configurações → Sistema) e recarregue a página.</p>
+          <p class="no-webgl-small">Se estiver em um computador da escola, o 3D pode ter sido bloqueado pela rede. Tente outro navegador ou dispositivo.</p>
+        </div>
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>

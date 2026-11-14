@@ -9,6 +9,8 @@ export type StoryStep = {
     options: string[];
     correct: number;
     success: string;
+    /** Pista exibida quando a resposta está incorreta. */
+    hint?: string;
   };
 };
 
@@ -51,6 +53,7 @@ export const gameStory = {
           options: ['Sismômetro', 'Câmera', 'Antena parabólica'],
           correct: 0,
           success: 'Descoberta registrada: uma estação podia continuar a pesquisa sem pessoas ao lado.',
+          hint: 'Pista: releia o texto e procure o instrumento que registrava as vibrações do solo.',
         },
       },
       {
@@ -66,6 +69,7 @@ export const gameStory = {
           options: ['━━━ linha quase imóvel', '〰〰〰 oscilações prolongadas'],
           correct: 1,
           success: 'As oscilações aparecem. Você encontrou a pista deixada pelo acontecimento!',
+          hint: 'Pista: depois do impacto, o chão continuou vibrando por quase uma hora. Qual registro mostra um movimento que continua?',
         },
       },
       {
@@ -81,6 +85,7 @@ export const gameStory = {
           options: ['Registro do impacto + sinal sísmico', 'Fotografia + marca de roda', 'Mapa + amostra de rocha'],
           correct: 0,
           success: 'Sua ficha está completa. O módulo partiu, mas o chão guardou seu rastro.',
+          hint: 'Pista: o texto fala de dois registros que se confirmam: um da missão e outro do sismômetro.',
         },
       },
     ] satisfies StoryStep[],

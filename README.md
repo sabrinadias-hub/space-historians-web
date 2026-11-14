@@ -5,8 +5,12 @@ Protótipo de jogo educativo 3D criado para o NASA Space Apps Challenge. Crianç
 ## Estado atual
 
 - exploração lunar em 3D;
-- astronauta controlável com `W`, `A`, `S`, `D` ou setas;
-- primeiro objeto: ALSEP da Apollo 12;
+- astronauta controlável com `W`, `A`, `S`, `D` ou setas (direção relativa à câmera);
+- joystick na tela para tablets;
+- colisão com equipamentos e rochas;
+- primeiro objeto: ALSEP da Apollo 12, com o módulo lunar da NASA como marco do pouso;
+- ficha reabrível (aproximar-se, clicar no equipamento ou tecla `E`);
+- progresso salvo no navegador;
 - prólogo narrativo;
 - três camadas de investigação;
 - atividades interativas e pontuação de conhecimento;
@@ -22,6 +26,19 @@ npm run dev
 ```
 
 Abra o endereço exibido pelo Vite no navegador.
+
+## Controles
+
+| Ação | Computador | Tablet |
+|---|---|---|
+| Caminhar | `W` `A` `S` `D` ou setas | joystick na tela |
+| Girar a câmera | arrastar com o mouse | arrastar com o dedo |
+| Abrir a ficha | chegar perto + `E`, ou clicar no equipamento | tocar em "Investigar" ou no equipamento |
+| Fechar a ficha | `Esc`, clicar fora ou "Continuar explorando" | "Continuar explorando" |
+
+Para apagar o progresso salvo (testes e apresentações), abra o jogo com `?reiniciar` no final do endereço.
+
+O jogo precisa de WebGL. Se a aceleração de hardware estiver desligada no navegador, uma mensagem explica como ativá-la.
 
 ## Gerar versão de produção
 
