@@ -5,12 +5,17 @@ Protótipo de jogo educativo 3D criado para o NASA Space Apps Challenge. Crianç
 ## Estado atual
 
 - exploração lunar em 3D;
-- astronauta controlável com `W`, `A`, `S`, `D` ou setas;
-- primeiro objeto: ALSEP da Apollo 12;
-- prólogo narrativo;
-- três camadas de investigação;
-- atividades interativas e pontuação de conhecimento;
-- estrutura preparada para 12 descobertas.
+- astronauta controlável com `W`, `A`, `S`, `D` ou setas (direção relativa à câmera);
+- joystick na tela para tablets;
+- colisão com equipamentos e rochas;
+- **12 descobertas**, na ordem do roteiro, liberadas uma de cada vez (ALSEP da Apollo 12, Surveyor 3, ALSEP da Apollo 14, ALSEP da Apollo 15, Rover da Apollo 15, ALSEP da Apollo 16, Rover da Apollo 16, Refletor da Apollo 11, Base do Eagle, PSEP da Apollo 11, ALSEP da Apollo 17, Rover da Apollo 17);
+- módulo lunar oficial da NASA como marco do pouso da Apollo 12; demais equipamentos em modelos simplificados (`src/models.ts`);
+- seta no chão e placas indicando a próxima descoberta;
+- ficha reabrível (aproximar-se, clicar no equipamento, tecla `E` ou pela rota de exploração);
+- prólogo, três camadas por equipamento (10 + 20 + 30 pontos, até 720 no total) e epílogo com escolha da descoberta favorita;
+- atividades de escolha, associação, ordenação e oito simulações identificadas como representação do jogo (`src/activities.ts`);
+- bloco "O que é fato e o que é ficção" em cada ficha;
+- progresso salvo no navegador.
 
 ## Executar localmente
 
@@ -22,6 +27,19 @@ npm run dev
 ```
 
 Abra o endereço exibido pelo Vite no navegador.
+
+## Controles
+
+| Ação | Computador | Tablet |
+|---|---|---|
+| Caminhar | `W` `A` `S` `D` ou setas | joystick na tela |
+| Girar a câmera | arrastar com o mouse | arrastar com o dedo |
+| Abrir a ficha | chegar perto + `E`, ou clicar no equipamento | tocar em "Investigar" ou no equipamento |
+| Fechar a ficha | `Esc`, clicar fora ou "Continuar explorando" | "Continuar explorando" |
+
+Para apagar o progresso salvo (testes e apresentações), abra o jogo com `?reiniciar` no final do endereço.
+
+O jogo precisa de WebGL. Se a aceleração de hardware estiver desligada no navegador, uma mensagem explica como ativá-la.
 
 ## Gerar versão de produção
 
@@ -40,6 +58,10 @@ Os arquivos publicados serão criados na pasta `dist`.
 ## Conteúdo
 
 Os textos narrativos ficam centralizados em `src/story-data.ts`. Isso permite atualizar histórias e preparar traduções sem alterar a estrutura 3D.
+
+Cada descoberta define título, missão, ano, local, posição no mapa, tipo de equipamento, encontro, as três etapas (com a atividade de cada uma) e o bloco de fatos e ficção. Tipos de atividade disponíveis: `choice` (padrão), `match`, `order` e `simulation`.
+
+O mapa do jogo é uma representação compacta: na Lua real, os locais das missões ficam a centenas de quilômetros uns dos outros.
 
 ## Créditos
 
