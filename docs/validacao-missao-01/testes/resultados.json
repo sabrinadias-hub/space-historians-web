@@ -1,0 +1,217 @@
+[
+  {
+    "name": "modelos 3D carregados",
+    "ok": true,
+    "detail": "{\"kenneyAssets\":\"loaded\",\"nasaModel\":\"loaded\"}"
+  },
+  {
+    "name": "prólogo preenchido",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "setas não giram a câmera",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "aviso aparece ao se aproximar (W = frente)",
+    "ok": true,
+    "detail": "2075 ms, distância 7.5"
+  },
+  {
+    "name": "câmera acompanha o astronauta",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "velocidade ≈ 4,5 unidades/s",
+    "ok": true,
+    "detail": "4.50"
+  },
+  {
+    "name": "colisão: não atravessa a central do ALSEP",
+    "ok": true,
+    "detail": "menor distância 1.40"
+  },
+  {
+    "name": "perder o foco solta as teclas",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "tecla E abre a ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Esc fecha a ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "clicar no equipamento 3D abre a ficha",
+    "ok": true,
+    "detail": "ponto 683,317"
+  },
+  {
+    "name": "pontuação inicial 0/60",
+    "ok": true,
+    "detail": "0 / 60 PONTOS"
+  },
+  {
+    "name": "erro mostra pista específica",
+    "ok": true,
+    "detail": "Pista: releia o texto e procure o instrumento que registrava as vibrações do solo."
+  },
+  {
+    "name": "erro não dá pontos",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "acerto aba 1 = 10",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "opções travadas após acerto",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sucesso permanece após clicar em outra opção",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "aba concluída reaberta mostra acerto",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "acerto aba 2 = 30",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "acerto aba 3 = 60",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sem pontos duplicados",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "objetivo atualizado após concluir",
+    "ok": true,
+    "detail": "Ficha 01 concluída · 60 pontos"
+  },
+  {
+    "name": "rota 01 marcada como concluída",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "arquivo lunar 01/12",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "afastar e voltar: aviso reaparece",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "aviso indica reabrir ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "com câmera girada, W segue a câmera",
+    "ok": true,
+    "detail": "giro -3.33 rad, cos=0.99"
+  },
+  {
+    "name": "progresso salvo após recarregar",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sem erros no console",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] joystick visível",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] dica de teclado escondida",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] joystick move o astronauta",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] aviso aparece com joystick",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] ficha abre por toque",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[paisagem] ficha acessível (botão visível ou rolável)",
+    "ok": true,
+    "detail": "{\"btnBottom\":651,\"vh\":768,\"scrollable\":false}"
+  },
+  {
+    "name": "[paisagem] sem erros",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] joystick visível",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] dica de teclado escondida",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] joystick move o astronauta",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] aviso aparece com joystick",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] ficha abre por toque",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "[retrato] ficha acessível (botão visível ou rolável)",
+    "ok": true,
+    "detail": "{\"btnBottom\":926,\"vh\":1024,\"scrollable\":false}"
+  },
+  {
+    "name": "[retrato] sem erros",
+    "ok": true,
+    "detail": ""
+  }
+]

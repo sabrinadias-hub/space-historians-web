@@ -1,0 +1,42 @@
+[
+  {
+    "name": "webgl: motor em uso",
+    "ok": true,
+    "detail": "webgl"
+  },
+  {
+    "name": "webgl: modelo da NASA carregado",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "webgl: sem aviso de 3D indisponível",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "webgl: sem erros no console",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "webgpu: motor em uso",
+    "ok": true,
+    "detail": "webgpu"
+  },
+  {
+    "name": "webgpu: modelo da NASA carregado",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "webgpu: sem aviso de 3D indisponível",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "webgpu: sem erros no console",
+    "ok": true,
+    "detail": ""
+  }
+]

@@ -1,0 +1,357 @@
+[
+  {
+    "name": "12 descobertas nos dados",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "02 bloqueada antes de concluir a 01",
+    "ok": true,
+    "detail": "{\"visible\":true,\"eyebrow\":\"STILL LOCKED\",\"title\":\"Surveyor 3\",\"button\":false}"
+  },
+  {
+    "name": "01 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "01 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "01 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "01 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "01 arquivo 01/12",
+    "ok": true,
+    "detail": "01"
+  },
+  {
+    "name": "objetivo após 01 indica a próxima",
+    "ok": true,
+    "detail": "File 01 complete · next: Surveyor 3"
+  },
+  {
+    "name": "seta-guia visível rumo à próxima",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "02 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "02 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "02 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "02 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "02 arquivo 02/12",
+    "ok": true,
+    "detail": "02"
+  },
+  {
+    "name": "03 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "03 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "03 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "03 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "03 arquivo 03/12",
+    "ok": true,
+    "detail": "03"
+  },
+  {
+    "name": "04 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "04 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "04 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "04 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "04 arquivo 04/12",
+    "ok": true,
+    "detail": "04"
+  },
+  {
+    "name": "05 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "05 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "05 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "05 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "05 arquivo 05/12",
+    "ok": true,
+    "detail": "05"
+  },
+  {
+    "name": "06 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "06 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "06 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "06 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "06 arquivo 06/12",
+    "ok": true,
+    "detail": "06"
+  },
+  {
+    "name": "07 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "07 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "07 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "07 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "07 arquivo 07/12",
+    "ok": true,
+    "detail": "07"
+  },
+  {
+    "name": "08 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "08 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "08 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "08 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "08 arquivo 08/12",
+    "ok": true,
+    "detail": "08"
+  },
+  {
+    "name": "09 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "09 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "09 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "09 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "09 arquivo 09/12",
+    "ok": true,
+    "detail": "09"
+  },
+  {
+    "name": "10 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "10 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "10 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "10 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "10 arquivo 10/12",
+    "ok": true,
+    "detail": "10"
+  },
+  {
+    "name": "11 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "11 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "11 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "11 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "11 arquivo 11/12",
+    "ok": true,
+    "detail": "11"
+  },
+  {
+    "name": "12 aviso perto do equipamento",
+    "ok": true,
+    "detail": "OBJECT FOUND"
+  },
+  {
+    "name": "12 ficha mostra título certo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "12 três atividades concluídas, 60 pontos",
+    "ok": true,
+    "detail": "60 / 60 POINTS"
+  },
+  {
+    "name": "12 etapa reaberta mostra sucesso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "12 arquivo 12/12",
+    "ok": true,
+    "detail": "12"
+  },
+  {
+    "name": "epílogo aparece ao concluir as 12",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "epílogo mostra 720 pontos",
+    "ok": true,
+    "detail": "720 of 720 points"
+  },
+  {
+    "name": "HUD mostra arquivo completo",
+    "ok": true,
+    "detail": "Archive complete · 720 points"
+  },
+  {
+    "name": "rota permite reler ficha concluída",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "progresso completo salvo após recarregar",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "favorita salva no diário",
+    "ok": true,
+    "detail": "08"
+  },
+  {
+    "name": "sem erros no console",
+    "ok": true,
+    "detail": ""
+  }
+]
