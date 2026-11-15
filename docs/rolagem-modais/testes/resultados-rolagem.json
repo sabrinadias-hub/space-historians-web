@@ -1,0 +1,74 @@
+{
+  "1366x768": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "1280x720": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "1024x768": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "900x900": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "1366x600": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "768x1024": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "1024x600": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "390x844": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  },
+  "844x390": {
+    "intro": "ok",
+    "aba1": "ok",
+    "aba3": "ok",
+    "horizontal": "ok",
+    "roda": "ok",
+    "epilogo": "ok"
+  }
+}
