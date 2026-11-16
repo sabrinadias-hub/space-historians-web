@@ -1,0 +1,167 @@
+[
+  {
+    "name": "abertura mostra escolha de idioma",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "duas opções: Português e English",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sugere português para navegador pt-BR",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: html lang = en",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: título da página",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: prólogo",
+    "ok": true,
+    "detail": "PROLOGUE · AN ARCHIVE FULL OF QUESTIONS"
+  },
+  {
+    "name": "EN: botão iniciar",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "trocar idioma volta à escolha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "PT: prólogo em português",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "PT: HUD em português",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: HUD arquivo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: HUD objetivo",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: HUD missão",
+    "ok": true,
+    "detail": "MISSION 01 · APOLLO 12"
+  },
+  {
+    "name": "EN: rota",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: controles",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: placas 3D em inglês",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: nenhuma letra do português no HUD",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: aviso",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: pontos",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: abas",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: rótulos da ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: pista em inglês",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: sucesso em inglês",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: simulação",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: aviso da simulação",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "EN: nenhuma letra do português na ficha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "?lang=en pula a escolha",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "última escolha sugerida (en)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "progresso mantido entre idiomas",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sem avisos de tradução incompleta",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sem erros no console",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "sem WebGL: mensagem em inglês",
+    "ok": true,
+    "detail": ""
+  }
+]

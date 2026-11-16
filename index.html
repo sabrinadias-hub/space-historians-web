@@ -5,62 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#080b25" />
     <title>Space Historians — Arquivo Lunar</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23080b25' stroke='%23ff9d4c' stroke-width='3'/%3E%3Cpath d='M32 14l4 14 14 4-14 4-4 14-4-14-14-4 14-4z' fill='%23ff9d4c'/%3E%3C/svg%3E" />
   </head>
   <body>
     <main id="game-shell">
-      <canvas id="game-canvas" tabindex="0" aria-label="Exploração 3D da superfície lunar"></canvas>
+      <canvas id="game-canvas" tabindex="0" data-i18n-aria="canvasLabel" aria-label="Exploração 3D da superfície lunar"></canvas>
 
       <header class="topbar">
         <div class="brand"><span class="brand-orbit">✦</span><div><strong>SPACE</strong><span>HISTORIANS</span></div></div>
-        <div class="progress-card"><span>ARQUIVO LUNAR</span><strong>01 <small>/ 12</small></strong><div class="progress"><i></i></div></div>
+        <div class="hud-right">
+          <div class="progress-card">
+            <span data-i18n="archive">ARQUIVO LUNAR</span><strong><span id="archive-count">00</span> <small>/ 12</small></strong><div class="progress"><i id="archive-progress"></i></div>
+            <dl class="score-lines">
+              <div><dt data-i18n="knowledgeHud">CONHECIMENTO</dt><dd id="hud-knowledge">0 / 720</dd></div>
+              <div><dt data-i18n="bonusHud">BÔNUS</dt><dd id="hud-bonus">0 / 120</dd></div>
+            </dl>
+          </div>
+          <button id="backpack-button" class="backpack-button"><span aria-hidden="true">🎒</span> <span data-i18n="backpack">MOCHILA</span></button>
+        </div>
       </header>
 
       <aside class="mission-card glass">
-        <p class="eyebrow">MISSÃO 01 · APOLLO 12</p>
-        <h1>O chão guardou<br /><em>a partida.</em></h1>
-        <p>Siga o sinal luminoso. Um laboratório deixado na Lua ainda tem uma história para contar.</p>
-        <div class="objective"><span>◎</span><div><small>OBJETIVO ATUAL</small><strong>Encontre a estação lunar</strong></div></div>
+        <p id="mission-eyebrow" class="eyebrow">MISSÃO 01 · APOLLO 12</p>
+        <h1 id="mission-title">O chão guardou<br /><em>a partida.</em></h1>
+        <p id="mission-teaser">Siga o sinal luminoso. Um laboratório deixado na Lua ainda tem uma história para contar.</p>
+        <div class="objective"><span>◎</span><div><small data-i18n="objective">OBJETIVO ATUAL</small><strong id="objective-text">Encontre a estação lunar</strong></div></div>
       </aside>
 
       <aside class="route-card glass">
-        <p class="eyebrow">ROTA DE EXPLORAÇÃO</p>
-        <div class="route-item active"><b>01</b><div><strong>Estação Lunar</strong><span>Apollo 12 · atual</span></div></div>
-        <div class="route-item"><b>02</b><div><strong>Surveyor 3</strong><span>bloqueado</span></div></div>
-        <div class="route-item"><b>03</b><div><strong>Estação Lunar</strong><span>Apollo 14 · bloqueado</span></div></div>
+        <p class="eyebrow" data-i18n="route">ROTA DE EXPLORAÇÃO</p>
+        <p class="route-hint" data-i18n="recommendedOrder">Ordem recomendada, não obrigatória</p>
+        <div id="route-list" class="route-list"></div>
       </aside>
 
-      <div class="controls glass"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><p><strong>CAMINHAR</strong>Use as teclas ou setas</p></div>
-      <p class="asset-credit">PERSONAGEM 3D · POLY BY GOOGLE · CC BY</p>
+      <div class="controls glass"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><p><strong data-i18n="walk">CAMINHAR</strong><span data-i18n="walkHint">Use as teclas ou setas</span></p></div>
+      <div id="joystick" class="joystick" role="application" data-i18n-aria="joystickLabel" aria-label="Controle de movimento: arraste para caminhar"><div class="joystick-knob"></div><span data-i18n="joystick">ARRASTE PARA CAMINHAR</span></div>
+      <p class="asset-credit" data-i18n="credit">PERSONAGEM 3D · POLY BY GOOGLE · CC BY</p>
 
       <section id="intro" class="intro">
-        <div class="intro-content">
+        <div id="language-step" class="language-step">
+          <p class="eyebrow">IDIOMA · LANGUAGE</p>
+          <h2 class="language-title">Escolha o idioma<small>Choose your language</small></h2>
+          <div class="language-options">
+            <button class="language-option" data-lang="pt" lang="pt-BR"><span class="lang-code">PT</span><strong>Português</strong><small>Brasil</small></button>
+            <button class="language-option" data-lang="en" lang="en"><span class="lang-code">EN</span><strong>English</strong><small>International</small></button>
+          </div>
+        </div>
+        <div id="name-step" class="intro-content step-hidden">
+          <p class="eyebrow" data-i18n="nameEyebrow">IDENTIFICAÇÃO DA TRIPULAÇÃO</p>
+          <h2 data-i18n-html="nameTitle">Como devemos<br /><em>te chamar?</em></h2>
+          <label for="player-name" class="visually-hidden" data-i18n="nameLabel">Nome do explorador (de 2 a 24 caracteres)</label>
+          <input id="player-name" maxlength="24" autocomplete="off" spellcheck="false" required aria-describedby="name-error" />
+          <p id="name-error" class="name-error" aria-live="polite"></p>
+          <div class="name-actions">
+            <button id="name-continue" class="primary-button"><span data-i18n="nameContinue">CONTINUAR</span> <span>→</span></button>
+          </div>
+        </div>
+        <div id="prologue-step" class="intro-content step-hidden">
           <p id="prologue-eyebrow" class="eyebrow"></p>
           <h2 id="prologue-title"></h2>
-          <div id="prologue-pages" class="prologue-pages"></div>
-          <p id="prologue-mission" class="prologue-mission"></p>
-          <button id="start-button">ABRIR O MAPA LUNAR <span>→</span></button>
+          <div id="prologue-page" class="prologue-page" aria-live="polite"></div>
+          <div class="prologue-nav">
+            <button id="prologue-back" class="ghost-button" data-i18n="prologueBack">VOLTAR</button>
+            <span id="prologue-dots" class="prologue-dots"></span>
+            <button id="prologue-next" class="primary-button"><span data-i18n="prologueNext">PRÓXIMO</span> <span>→</span></button>
+            <button id="start-button"><span data-i18n="startButton">ESCOLHER LOCAL DE EXPLORAÇÃO</span> <span>→</span></button>
+          </div>
+          <button id="change-language" class="link-button" data-i18n="changeLanguage">Trocar idioma</button>
         </div>
       </section>
 
       <section id="discovery-toast" class="discovery-toast glass hidden" aria-live="polite">
-        <div class="signal">✦</div><div><p class="eyebrow">OBJETO ENCONTRADO</p><h2>Estação Lunar da Apollo 12</h2></div>
-        <button id="investigate-button">INVESTIGAR →</button>
+        <div class="signal">✦</div><div><p id="toast-eyebrow" class="eyebrow">OBJETO ENCONTRADO</p><h2 id="toast-title">ALSEP da Apollo 12</h2><p id="toast-note" class="toast-note"></p></div>
+        <button id="investigate-button">INVESTIGAR <kbd class="key-hint">E</kbd></button>
       </section>
 
       <section id="discovery-card" class="modal hidden" aria-modal="true" role="dialog">
         <article class="artifact-card">
-          <div class="artifact-visual"><div class="artifact-number">01</div><div class="station-icon">⌁</div><span>OCEANUS PROCELLARUM</span></div>
+          <figure class="artifact-visual">
+            <div id="card-number" class="artifact-number">01</div><div id="card-icon" class="station-icon">⌁</div>
+            <img id="card-photo" class="artifact-photo" alt="" loading="lazy" decoding="async" />
+            <p id="card-photo-fallback" class="photo-fallback" hidden></p>
+            <figcaption><span id="card-location">OCEANUS PROCELLARUM</span><small id="card-photo-credit"></small></figcaption>
+          </figure>
           <div class="artifact-copy">
-            <div class="artifact-heading"><p class="eyebrow">DESCOBERTA 01 DE 12</p><strong id="knowledge-score">0 / 60 PONTOS</strong></div>
-            <h2>ALSEP da Apollo 12</h2>
-            <p class="artifact-subtitle">O chão guardou a partida</p>
+            <div class="artifact-heading"><p id="card-eyebrow" class="eyebrow">DESCOBERTA 01 DE 12</p><strong id="knowledge-score">0 / 60 PONTOS</strong></div>
+            <div id="card-badge" class="card-badge" hidden></div>
+            <h2 id="card-title">ALSEP da Apollo 12</h2>
+            <p id="card-subtitle" class="artifact-subtitle">O chão guardou a partida</p>
             <div id="encounter-copy" class="encounter-copy"></div>
-            <div id="story-tabs" class="story-tabs" aria-label="Camadas de conhecimento"></div>
+            <div id="story-tabs" class="story-tabs" data-i18n-aria="tabsLabel" aria-label="Camadas de conhecimento"></div>
             <section id="story-panel" class="story-panel hidden" aria-live="polite"></section>
-            <dl><div><dt>MISSÃO</dt><dd>Apollo 12</dd></div><div><dt>ANO</dt><dd>1969</dd></div></dl>
-            <button id="continue-button">CONTINUAR EXPLORANDO</button>
+            <details id="bonus-quiz" class="bonus-quiz">
+              <summary><span><strong data-i18n="quizTitle">QUIZ OPCIONAL</strong><small id="quiz-status" data-i18n="quizValue">Vale +10 pontos bônus</small></span></summary>
+              <div id="quiz-body" class="quiz-body"></div>
+            </details>
+            <dl><div><dt data-i18n="missionLabel">MISSÃO</dt><dd id="card-mission">Apollo 12</dd></div><div><dt data-i18n="yearLabel">ANO</dt><dd id="card-year">1969</dd></div></dl>
+            <details class="facts"><summary data-i18n="factsSummary">O que é fato e o que é ficção</summary><p><strong data-i18n="factsLabel">Fatos históricos:</strong> <span id="card-facts"></span></p><p><strong data-i18n="fictionLabel">Ficção do jogo:</strong> <span id="card-fiction"></span></p></details>
+            <button id="continue-button" data-i18n="continue">CONTINUAR EXPLORANDO</button>
           </div>
         </article>
+      </section>
+      <section id="epilogue" class="modal hidden" aria-modal="true" role="dialog">
+        <article class="epilogue-card glass">
+          <p id="epilogue-eyebrow" class="eyebrow"></p>
+          <h2 id="epilogue-title"></h2>
+          <div id="epilogue-text"></div>
+          <p id="epilogue-distinction" class="epilogue-distinction"></p>
+          <dl class="epilogue-stats"><div><dt data-i18n="equipmentLabel">EQUIPAMENTOS</dt><dd data-i18n="equipmentValue">12 investigados</dd></div><div><dt data-i18n="knowledgeLabel">CONHECIMENTO</dt><dd id="epilogue-score">720 / 720</dd></div><div><dt data-i18n="bonusLabel">BÔNUS</dt><dd id="epilogue-bonus">0 / 120</dd></div><div><dt data-i18n="totalLabel">TOTAL</dt><dd id="epilogue-total">720 / 840</dd></div></dl>
+          <p id="epilogue-favorite-prompt" class="epilogue-prompt"></p>
+          <div id="epilogue-favorites" class="epilogue-favorites"></div>
+          <p id="epilogue-closing" class="epilogue-closing"></p>
+          <button id="epilogue-close" class="primary-button" data-i18n="continue">CONTINUAR EXPLORANDO</button>
+        </article>
+      </section>
+      <section id="backpack" class="modal hidden" aria-modal="true" role="dialog" aria-labelledby="backpack-title">
+        <article class="backpack-card glass">
+          <header class="backpack-head">
+            <div>
+              <p class="eyebrow" data-i18n="backpackExplorer">EXPLORADOR</p>
+              <div id="backpack-name-view" class="backpack-name"><h2 id="backpack-title"></h2><button id="edit-name" class="link-button" data-i18n="editName">Editar nome</button></div>
+              <form id="backpack-name-form" class="backpack-name-form" hidden>
+                <input id="backpack-name-input" maxlength="24" autocomplete="off" spellcheck="false" required aria-describedby="backpack-name-error" data-i18n-aria="nameLabel" />
+                <button type="submit" class="primary-button" data-i18n="saveName">SALVAR</button>
+                <button type="button" id="cancel-name" class="ghost-button" data-i18n="cancel">CANCELAR</button>
+                <p id="backpack-name-error" class="name-error" aria-live="polite"></p>
+              </form>
+            </div>
+            <dl class="backpack-scores">
+              <div><dt data-i18n="knowledgeHud">CONHECIMENTO</dt><dd id="backpack-knowledge">0 / 720</dd></div>
+              <div><dt data-i18n="bonusHud">BÔNUS</dt><dd id="backpack-bonus">0 / 120</dd></div>
+            </dl>
+          </header>
+          <p class="backpack-hint" data-i18n="backpackHint"></p>
+          <div id="badge-grid" class="badge-grid"></div>
+          <footer class="backpack-foot">
+            <div class="backpack-lang"><span data-i18n="languageLabel">IDIOMA</span><button data-lang="pt" lang="pt-BR">PT</button><button data-lang="en" lang="en">EN</button></div>
+            <button id="backpack-close" class="primary-button" data-i18n="close">FECHAR</button>
+          </footer>
+        </article>
+      </section>
+      <section id="no-webgl" class="no-webgl" hidden>
+        <div class="glass">
+          <p class="eyebrow" data-i18n="noWebglEyebrow">NÃO FOI POSSÍVEL ABRIR O MAPA LUNAR</p>
+          <h2 data-i18n="noWebglTitle">O 3D está desligado neste navegador</h2>
+          <p data-i18n-html="noWebglText">Para explorar a Lua, peça a um adulto para ativar a <strong>aceleração de hardware</strong> nas configurações do navegador (Chrome ou Edge: Configurações → Sistema) e recarregue a página.</p>
+          <p class="no-webgl-small" data-i18n="noWebglSmall">Este navegador não ofereceu WebGL nem WebGPU. Em computadores da escola, o 3D pode estar bloqueado pela rede ou pelo administrador: tente outro navegador ou dispositivo.</p>
+        </div>
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>
